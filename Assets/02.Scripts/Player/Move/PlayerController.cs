@@ -2,11 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public interface IMoveInput
-{
-    float GetMoveX();
-}
-
 public class PlayerController : MonoBehaviour
 {
     [Header("Move Settings")]
