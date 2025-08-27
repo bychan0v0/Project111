@@ -9,12 +9,12 @@ public abstract class TrajectorySO : ScriptableObject, ITrajectory
     [SerializeField] protected float maxLifeTime = 6f;
     protected float life;
 
-    public virtual void Init(Transform proj, Rigidbody2D rb, Vector2 start, Vector2 aimPoint, Transform aimTarget)
+    public virtual void Init(Rigidbody2D rb, Transform shooter, Transform target)
     {
         life = 0f;
     }
 
-    public abstract bool Step(Transform proj, Rigidbody2D rb, float dt);
+    public abstract bool Step(Rigidbody2D rb, Transform shooter, float dt);
 
     protected bool TickLife(float dt)
     {

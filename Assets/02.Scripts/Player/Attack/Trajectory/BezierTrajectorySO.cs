@@ -18,10 +18,10 @@ public class BezierTrajectorySO : TrajectorySO
     private Vector2 S, C, E;
     private float t, totalDuration;
 
-    public override void Init(Transform proj, Rigidbody2D rb, Vector2 start, Vector2 aimPoint, Transform aimTarget)
+    public override void Init(Rigidbody2D rb, Transform shooter, Transform target)
     {
-        base.Init(proj, rb, start, aimPoint, aimTarget);
-        S = start; E = aimPoint;
+        base.Init(rb, shooter, target);
+        S = shooter.position; E = target.position;
         float dist = Vector2.Distance(S, E);
         float tn = Mathf.Clamp01(dist / Mathf.Max(0.001f, arcAtMaxRange));
         float arcH = Mathf.Lerp(arcMin, arcMax, arcCurve.Evaluate(tn));
@@ -35,7 +35,7 @@ public class BezierTrajectorySO : TrajectorySO
         t = 0f;
     }
 
-    public override bool Step(Transform proj, Rigidbody2D rb, float dt)
+    public override bool Step(Rigidbody2D rb, Transform shooter, float dt)
     {
         t += dt / totalDuration * Mathf.Max(1f, tMaxBeyond);
         Vector2 pos = Bezier2(S, C, E, t);
@@ -46,7 +46,7 @@ public class BezierTrajectorySO : TrajectorySO
         {
             Vector2 dB = Bezier2Deriv(S, C, E, t);
             Vector2 dir = dB.sqrMagnitude > 1e-8f ? dB.normalized : (pos - prev).normalized;
-            if (dir.sqrMagnitude > 1e-8f) proj.right = dir;
+            if (dir.sqrMagnitude > 1e-8f) shooter.right = dir;
         }
 
         return t >= tMaxBeyond || TickLife(dt);

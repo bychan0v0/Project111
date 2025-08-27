@@ -10,21 +10,21 @@ public class GuidedTrajectorySO : TrajectorySO
 
     private Vector2 dir;
 
-    public override void Init(Transform proj, Rigidbody2D rb, Vector2 start, Vector2 aimPoint, Transform aimTarget)
+    public override void Init(Rigidbody2D rb, Transform shooter, Transform target)
     {
-        base.Init(proj, rb, start, aimPoint, aimTarget);
-        dir = (aimPoint - start).sqrMagnitude > 1e-8f
-            ? (aimPoint - start).normalized
+        base.Init(rb, shooter, target);
+        dir = (target.position - shooter.position).sqrMagnitude > 1e-8f
+            ? (target.position - shooter.position).normalized
             : Vector2.right;
-        proj.right = dir;
+        shooter.right = dir;
     }
 
-    public override bool Step(Transform proj, Rigidbody2D rb, float dt)
+    public override bool Step(Rigidbody2D rb, Transform shooter, float dt)
     {
         rb.MovePosition(rb.position + dir * (speed * dt));
         if (rotateToVelocity)
         {
-            proj.right = dir;
+            shooter.right = dir;
         }
         return TickLife(dt);
     }

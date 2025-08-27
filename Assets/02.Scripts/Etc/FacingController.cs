@@ -6,7 +6,6 @@ using UnityEngine;
 public class FacingController : MonoBehaviour
 {
     [Header("Facing Settings")]
-    [SerializeField] private Transform enemy;
     private int idleFaceDir = 1;
     private SpriteRenderer sprite;
 
@@ -18,7 +17,7 @@ public class FacingController : MonoBehaviour
         sprite = GetComponentInChildren<SpriteRenderer>();
 
         Vector3 selfPos = transform.position;
-        idleFaceDir = enemy.position.x - selfPos.x >= 0f ? 1 : -1;
+        idleFaceDir = 0f - selfPos.x >= 0f ? 1 : -1;
     }
     
     private void LateUpdate()

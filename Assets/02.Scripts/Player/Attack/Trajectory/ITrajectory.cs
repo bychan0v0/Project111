@@ -4,7 +4,7 @@ using UnityEngine;
 
 public interface ITrajectory
 {
-    void Init(Transform proj, Rigidbody2D rb, Vector2 start, Vector2 aimPoint, Transform aimTarget);
-    bool Step(Transform proj, Rigidbody2D rb, float dt);
+    void Init(Rigidbody2D rb, Transform shooter, Transform target);
+    bool Step(Rigidbody2D rb, Transform start, float dt);
 }
 
