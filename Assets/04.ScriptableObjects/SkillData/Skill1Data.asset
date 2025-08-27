@@ -9,9 +9,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a5bdb57d79ff16446931ede84f75294a, type: 3}
-  m_Name: Straight
+  m_Script: {fileID: 11500000, guid: 0b3adbb345473fe47b0b75f1b2144e32, type: 3}
+  m_Name: Skill1Data
   m_EditorClassIdentifier: 
-  rotateToVelocity: 1
-  maxLifeTime: 6
-  speed: 12
+  skillId: Skill1
+  cooldown: 0
+  prefab: {fileID: 4993487510305478498, guid: 244e043a6a80e3149ad6c49016f6b5d6, type: 3}

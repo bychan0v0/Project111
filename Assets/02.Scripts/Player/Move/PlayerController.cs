@@ -7,14 +7,22 @@ public class PlayerController : MonoBehaviour
     [Header("Move Settings")]
     [SerializeField] private float moveSpeed = 6f;
     
-    private bool isMoving = false;
+    [Header("Ground Check")]
+    [SerializeField] private LayerMask groundMask;
+    [SerializeField] private bool isGround = false;
     
-    private IMoveInput input;
+    [Header("Control Lock")]
+    [SerializeField] private bool blockInput = false;     // 입력 막기 토글
+    [SerializeField] private Behaviour[] disableOnLock;   // 루트 동안 꺼둘 컴포넌트(SkillManager, AutoAttack 등 등록)
+    
+    private Collider2D col; 
     private Rigidbody2D rb;
+    private IMoveInput input;
     private SkillManager skillManager;
-
+    
     private void Awake()
     {
+        col = GetComponent<Collider2D>();
         rb = GetComponent<Rigidbody2D>();
         input = GetComponent<IMoveInput>();
         skillManager = GetComponentInChildren<SkillManager>();
@@ -22,14 +30,56 @@ public class PlayerController : MonoBehaviour
 
     private void FixedUpdate()
     {
-        // 스킬 캐스팅 중이면 이동 금지
-        if (skillManager && skillManager.IsCasting)
+        UpdateGrounded();
+        
+        if (!isGround || skillManager.IsCasting)
         {
-            rb.velocity = Vector2.zero;
+            rb.velocity = new Vector2(0f, rb.velocity.y);
             return;
         }
         
         float x = input.GetMoveX();
-        rb.velocity = new Vector2(x * moveSpeed, 0f);
+        rb.velocity = new Vector2(x * moveSpeed, rb.velocity.y);
+    }
+    
+    private void UpdateGrounded()
+    {
+        if (col.IsTouchingLayers(groundMask))
+        {
+            isGround = true;
+            return;
+        }
+
+        isGround = false;
+    }
+
+    public void StartRoot()
+    {
+        blockInput = true;
+        
+        rb.constraints = RigidbodyConstraints2D.FreezePosition;
+
+        // 등록된 컴포넌트 비활성화
+        if (disableOnLock != null)
+        {
+            foreach (var b in disableOnLock)
+            {
+                b.enabled = false;
+            }
+        }
+    }
+    
+    public void EndRoot()
+    {
+        blockInput = false;
+
+        // 컴포넌트 다시 켜기
+        if (disableOnLock != null)
+        {
+            foreach (var b in disableOnLock)
+            {
+                b.enabled = true;
+            }
+        }
     }
 }

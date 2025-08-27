@@ -1,9 +1,10 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
 
-public class Skill1 : MonoBehaviour, ISkillBehaviour
+public class Skill2Action : MonoBehaviour, ISkillBehaviour
 {
     [Header("Refs")]
     [SerializeField] private GameObject arrowPrefab;
@@ -15,9 +16,11 @@ public class Skill1 : MonoBehaviour, ISkillBehaviour
 
     [Header("Volley")]
     [SerializeField, Min(1)] private int arrowCount = 3;   // 항상 3발
-
+    [SerializeField, Min(0f)] private float burstInterval = 0.06f;   // 3발 간 간격
+    [SerializeField, Min(0f)] private float burstDelay = 0.75f;   // 발사 대기 시간
+    
     private bool busy;
-
+    
     public void Execute(in SkillContext ctx)
     {
         if (busy) return;
@@ -40,18 +43,14 @@ public class Skill1 : MonoBehaviour, ISkillBehaviour
             .DOLocalRotate(new Vector3(0f, 0f, 1080f), totalFlipTime, RotateMode.LocalAxisAdd)
             .SetEase(Ease.Linear);
 
+        yield return new WaitForSeconds(burstDelay);
+        
         // 3) 회전하는 동안 3발 간격 발사
-        float interval = totalFlipTime / arrowCount;
         for (int i = 0; i < arrowCount; i++)
         {
             FireOneArrow(ctx);
-            float t = 0f;
-            while (t < interval)
-            {
-                t += Time.deltaTime;
-
-                yield return null;
-            }
+            if (i < arrowCount - 1 && burstInterval > 0f)
+                yield return new WaitForSeconds(burstInterval);
         }
 
         // 4) 회전 각 정리

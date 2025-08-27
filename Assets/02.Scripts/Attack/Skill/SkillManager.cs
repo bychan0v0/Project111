@@ -21,10 +21,9 @@ public class SkillManager : MonoBehaviour
         // 스킬 프리팹 미리 생성(플레이어/AI 모두 동일)
         foreach (var def in loadout)
         {
-            if (!def || !def.prefab) continue;
             var obj = Instantiate(def.prefab, transform);
             var beh = obj.GetComponent<ISkillBehaviour>();
-            if (beh != null) skills[def.skillId] = beh;
+            skills[def.skillId] = beh;
             cooldownEnd[def.skillId] = 0f;
         }
     }

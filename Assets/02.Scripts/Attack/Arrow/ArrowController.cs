@@ -18,23 +18,19 @@ public class ArrowController : MonoBehaviour
     private Collider2D col;
     private SpriteRenderer sprite;
 
-    private bool running;   // 궤적 실행 중
-    private bool ended;   // 종료(더 이상 업데이트 X)
+    private bool running;   // ???? ???? ??
+    private bool ended;   // ????(?? ??? ??????? X)
+    
+    public event Action<Vector2, Collider2D> OnFirstHit; 
 
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
         col = GetComponent<Collider2D>();
         sprite = GetComponent<SpriteRenderer>();
-
-        rb.gravityScale = 0f;
-        rb.isKinematic  = true;
-        rb.collisionDetectionMode = CollisionDetectionMode2D.Continuous;
-        
-        col.isTrigger = true;
     }
 
-    // 발사 직후 잠깐 충돌 무시(스폰 지점에서 즉시 맞는 것 방지)
+    // ??? ???? ??? ?? ????(???? ???????? ??? ??? ?? ????)
     public void BeginCollisionDelay()
     {
         col.enabled = false;
@@ -44,7 +40,7 @@ public class ArrowController : MonoBehaviour
         }).SetUpdate(true);
     }
 
-    // 오토어택/스킬에서 호출: 궤적 SO 장착 + 실행 시작
+    // ???????/??????? ???: ???? SO ???? + ???? ????
     public void SetupTrajectory(TrajectorySO so, Vector3 startPos, Transform aimTarget)
     {
         trajectorySO = so;
@@ -61,7 +57,7 @@ public class ArrowController : MonoBehaviour
     {
         if (!running || ended || trajectorySO == null) return;
 
-        // 궤적 1프레임 진행. true면 자연 종료(보통은 충돌에서 먼저 끝남)
+        // ???? 1?????? ????. true?? ??? ????(?????? ?????? ???? ????)
         bool naturalEnd = trajectorySO.Step(rb, transform, Time.fixedDeltaTime);
         if (naturalEnd)
         {
@@ -86,16 +82,17 @@ public class ArrowController : MonoBehaviour
             return;
         }
         
-        // 이동 즉시 정지
+        // ??? ??? ????
         running = false;
-
+        OnFirstHit?.Invoke(transform.position, other);
+        
         if (isPlayer)
         {
             EndNowImmediate();
             return;
         }
 
-        StickAndFade();   // 즉시 그 자리에 멈춘 뒤 페이드
+        StickAndFade();   // ??? ?? ????? ???? ?? ?????
     }
 
     public void EndNowImmediate()

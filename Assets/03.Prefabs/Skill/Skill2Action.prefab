@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 3372453374727204095}
   - component: {fileID: 5239824107395200688}
   m_Layer: 0
-  m_Name: Skill1
+  m_Name: Skill2Action
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -46,9 +46,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   arrowPrefab: {fileID: 3734133858967969745, guid: 8b4e2d282472a814f9728e04fa92e58a, type: 3}
   trajectorySO: {fileID: 11400000, guid: 209ced58f0571f4428abceec19d8f91a, type: 2}
-  visualRoot: {fileID: 0}
-  jumpImpulse: 7.5
-  totalFlipTime: 0.9
-  lockXVelocityDuringFlip: 0
+  jumpImpulse: 12.5
+  totalFlipTime: 1.25
   arrowCount: 3
-  arrowSpeed: 12
+  burstInterval: 0.2
+  burstDelay: 0.5

@@ -8,9 +8,6 @@ public class RiseAndDropTrajectorySO : TrajectorySO
     [Header("Speed Settings")]
     [SerializeField] private float speed = 12f;
 
-    [Header("Target Head Offset")]
-    [SerializeField] private float headOffsetY = 1.0f;
-
     [Header("Screen & Camera")]
     [SerializeField] private float screenTopMargin = 0.5f; // 화면 위로 얼마나 더 올라가서 사라질지(월드 유닛)
 
@@ -40,7 +37,7 @@ public class RiseAndDropTrajectorySO : TrajectorySO
         float targetY = target.position.y;
 
         dropX = targetX;    // 기본은 타겟 X
-        dropStopY = targetY + headOffsetY;    // 참고용(보통 충돌로 끝내므로 사용하지 않아도 됨)
+        dropStopY = targetY;    // 참고용(보통 충돌로 끝내므로 사용하지 않아도 됨)
 
         // 초기 위치/방향: 발사자 X에서 수직 상승
         rb.MovePosition(new Vector2(shooter.position.x, shooter.position.y));

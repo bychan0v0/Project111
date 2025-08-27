@@ -703,7 +703,11 @@ MonoBehaviour:
   target: {fileID: 1180685735}
   loadout:
   - {fileID: 11400000, guid: 1721758aae13d3a448f7d772561e23bf, type: 2}
+  - {fileID: 11400000, guid: e9fe61a6f691ba949af41d2a57c6818c, type: 2}
   - {fileID: 11400000, guid: d54b3e2751d0ae141ba96fbabca9b09c, type: 2}
+  - {fileID: 11400000, guid: 7b89d24658997de4f90337d4ec03cc47, type: 2}
+  - {fileID: 11400000, guid: 770d0b164332e8643b4a0c3b3eb15f9b, type: 2}
+  - {fileID: 11400000, guid: d59886086705411478e64d2d4a7465e9, type: 2}
 --- !u!1 &433976079
 GameObject:
   m_ObjectHideFlags: 0
@@ -1129,6 +1133,10 @@ MonoBehaviour:
   target: {fileID: 996421196}
   loadout:
   - {fileID: 11400000, guid: 1721758aae13d3a448f7d772561e23bf, type: 2}
+  - {fileID: 11400000, guid: d54b3e2751d0ae141ba96fbabca9b09c, type: 2}
+  - {fileID: 11400000, guid: 7b89d24658997de4f90337d4ec03cc47, type: 2}
+  - {fileID: 11400000, guid: 770d0b164332e8643b4a0c3b3eb15f9b, type: 2}
+  - {fileID: 11400000, guid: d59886086705411478e64d2d4a7465e9, type: 2}
 --- !u!1 &795261171
 GameObject:
   m_ObjectHideFlags: 0
@@ -1500,7 +1508,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6a271035d8b33014781ecda99fabe78a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveSpeed: 3
+  moveSpeed: 5
+  groundMask:
+    serializedVersion: 2
+    m_Bits: 64
+  isGround: 0
 --- !u!50 &996421199
 Rigidbody2D:
   serializedVersion: 4
@@ -1516,7 +1528,7 @@ Rigidbody2D:
   m_Mass: 1
   m_LinearDrag: 0
   m_AngularDrag: 0.05
-  m_GravityScale: 1
+  m_GravityScale: 2
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
@@ -1524,9 +1536,9 @@ Rigidbody2D:
   m_ExcludeLayers:
     serializedVersion: 2
     m_Bits: 0
-  m_Interpolate: 0
+  m_Interpolate: 1
   m_SleepingMode: 1
-  m_CollisionDetection: 0
+  m_CollisionDetection: 1
   m_Constraints: 4
 --- !u!114 &996421200
 MonoBehaviour:
@@ -1588,7 +1600,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   skillManager: {fileID: 315245138}
-  attackInterval: 0.6
+  attackInterval: 0.75
   idleEps: 0.05
 --- !u!1 &1086061353
 GameObject:
@@ -1774,7 +1786,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6a271035d8b33014781ecda99fabe78a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveSpeed: 3
+  moveSpeed: 5
+  groundMask:
+    serializedVersion: 2
+    m_Bits: 64
+  isGround: 0
 --- !u!114 &1180685737
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1805,7 +1821,7 @@ Rigidbody2D:
   m_Mass: 1
   m_LinearDrag: 0
   m_AngularDrag: 0.05
-  m_GravityScale: 1
+  m_GravityScale: 2
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
@@ -1813,9 +1829,9 @@ Rigidbody2D:
   m_ExcludeLayers:
     serializedVersion: 2
     m_Bits: 0
-  m_Interpolate: 0
+  m_Interpolate: 1
   m_SleepingMode: 1
-  m_CollisionDetection: 0
+  m_CollisionDetection: 1
   m_Constraints: 4
 --- !u!114 &1180685739
 MonoBehaviour:
@@ -1877,7 +1893,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   skillManager: {fileID: 751307553}
-  attackInterval: 0.6
+  attackInterval: 0.75
   idleEps: 0.05
 --- !u!1 &1210163311
 GameObject:
@@ -2531,10 +2547,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0cd44c1031e13a943bb63640046fad76, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_UiScaleMode: 0
+  m_UiScaleMode: 1
   m_ReferencePixelsPerUnit: 100
   m_ScaleFactor: 1
-  m_ReferenceResolution: {x: 800, y: 600}
+  m_ReferenceResolution: {x: 2560, y: 1440}
   m_ScreenMatchMode: 0
   m_MatchWidthOrHeight: 0
   m_PhysicalUnit: 3
