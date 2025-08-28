@@ -4,46 +4,56 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
+    private static readonly int IS_RUN = Animator.StringToHash("isRun");
+
     [Header("Move Settings")]
     [SerializeField] private float moveSpeed = 6f;
-    
+
     [Header("Ground Check")]
     [SerializeField] private LayerMask groundMask;
-    [SerializeField] private bool isGround = false;
     
-    [Header("Control Lock")]
-    [SerializeField] private bool blockInput = false;     // 입력 막기 토글
-    [SerializeField] private Behaviour[] disableOnLock;   // 루트 동안 꺼둘 컴포넌트(SkillManager, AutoAttack 등 등록)
-    
-    private Collider2D col; 
+    private bool isGround = false;
+    private bool isMoving = false;
+    private bool isRoot = false;
+
+    private Collider2D col;
     private Rigidbody2D rb;
     private IMoveInput input;
     private SkillManager skillManager;
-    
+    private Animator animator;
+
     public bool IsGround => isGround;
-    
+    public bool IsMoving => isMoving;
+    public bool IsRoot => isRoot;
+
     private void Awake()
     {
         col = GetComponent<Collider2D>();
         rb = GetComponent<Rigidbody2D>();
         input = GetComponent<IMoveInput>();
         skillManager = GetComponentInChildren<SkillManager>();
+
+        animator = GetComponent<Animator>();
     }
 
     private void FixedUpdate()
     {
         UpdateGrounded();
-        
+
         if (!isGround || skillManager.IsCasting)
         {
             rb.velocity = new Vector2(0f, rb.velocity.y);
+            SetRun(false);
             return;
         }
-        
+
         float x = input.GetMoveX();
         rb.velocity = new Vector2(x * moveSpeed, rb.velocity.y);
+
+        UpdateMoving(x);
+        SetRun(Mathf.Abs(x) > 0.01f);
     }
-    
+
     private void UpdateGrounded()
     {
         if (col.IsTouchingLayers(groundMask))
@@ -55,33 +65,39 @@ public class PlayerController : MonoBehaviour
         isGround = false;
     }
 
-    public void StartRoot()
+    private void UpdateMoving(float x)
     {
-        blockInput = true;
-        
-        rb.constraints = RigidbodyConstraints2D.FreezePosition;
-
-        // 등록된 컴포넌트 비활성화
-        if (disableOnLock != null)
+        if (Mathf.Abs(x) > 0.01f)
         {
-            foreach (var b in disableOnLock)
-            {
-                b.enabled = false;
-            }
+            isMoving = true;
+        }
+        else
+        {
+            isMoving = false;
         }
     }
-    
-    public void EndRoot()
-    {
-        blockInput = false;
 
-        // 컴포넌트 다시 켜기
-        if (disableOnLock != null)
+    public void StartRoot(float rootDuration)
+    {
+        StartCoroutine(RootRoutine(rootDuration));
+    }
+
+    private IEnumerator RootRoutine(float rootDuration)
+    {
+        isRoot = true;
+        
+        float t = 0f;
+        while (t < rootDuration)
         {
-            foreach (var b in disableOnLock)
-            {
-                b.enabled = true;
-            }
+            t += Time.deltaTime;
+            yield return null;
         }
+        
+        isRoot = false;
+    }
+    
+    private void SetRun(bool value)
+    {
+        animator.SetBool(IS_RUN, value);
     }
 }

@@ -34,9 +34,6 @@ public class PullAnchor : MonoBehaviour
     {
         float t = 0f;
 
-        // (선택) 플레이어 컨트롤 잠시 비활성화가 필요하면 여기서 off → 끝나면 on
-        // ex) playerController.SetInputEnabled(false);
-
         var originalConstraints = targetRb.constraints;
         targetRb.constraints = RigidbodyConstraints2D.FreezeRotation;
 
@@ -66,7 +63,7 @@ public class PullAnchor : MonoBehaviour
                 if (contactTimer >= rootChargeTime)
                 {
                     var player = target.GetComponent<PlayerController>();
-                    StartCoroutine(RootRoutine(player));
+                    player.StartRoot(rootDuration);
                     
                     // 한번 발동 후, 다시 누적하려면 타이머 초기화(원한다면 그대로 유지도 가능)
                     contactTimer = 0f;
@@ -79,24 +76,8 @@ public class PullAnchor : MonoBehaviour
 
         // 종료 처리
         targetRb.constraints = originalConstraints;
-        // playerController.SetInputEnabled(true);
-
-        // VFX 잔상 등 남긴다면 여기
+        
         Destroy(gameObject);
-    }
-    
-    private IEnumerator RootRoutine(PlayerController player)
-    {
-        player.StartRoot();
-
-        float t = 0f;
-        while (t < rootDuration)
-        {
-            t += Time.deltaTime;
-            yield return null;
-        }
-
-        player.EndRoot();
     }
     
     private void OnTriggerEnter2D(Collider2D other)

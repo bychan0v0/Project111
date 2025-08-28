@@ -20,6 +20,8 @@ public class SkillManager : MonoBehaviour
     
     private bool isSilence = false;
 
+    public IReadOnlyList<SkillData> Loadout => loadout;
+    
     private void Awake()
     {
         player = GetComponentInParent<PlayerController>();
@@ -55,6 +57,11 @@ public class SkillManager : MonoBehaviour
             Debug.Log("플레이어가 침묵 상태입니다.");
             return false;
         }
+        if (player.IsRoot)
+        {
+            Debug.Log("플레이어가 속박 중입니다.");
+            return false;
+        }
         
         // 쿨다운 체크
         var def = loadout.Find(d => d.skillId == skillId);
@@ -78,5 +85,22 @@ public class SkillManager : MonoBehaviour
 
         beh.Execute(in ctx);
         return true;
+    }
+    
+    // 로드아웃에서 '쿨다운 끝난' 첫 스킬을 바로 사용
+    public bool TryUseFirstReadyInLoadout()
+    {
+        foreach (var s in loadout) // loadout: List<SkillData> 등
+        {
+            if (UseSkill(s.skillId))   // ← 내부에서 쿨다운/조건 체크 후 시작되면 true
+                return true;
+        }
+        return false;
+    }
+    
+    public float GetCooldownRemaining(string skillId)
+    {
+        if (!cooldownEnd.TryGetValue(skillId, out var end)) return 0f;
+        return Mathf.Max(0f, end - Time.time); // 남은 초
     }
 }

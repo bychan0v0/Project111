@@ -2,8 +2,7 @@ using UnityEngine;
 
 public class AttackManager : MonoBehaviour
 {
-    [Header("Refs")]
-    [SerializeField] private SkillManager skillManager;
+    private static readonly int FIRE = Animator.StringToHash("Fire");
 
     [Header("AutoAttack Settings")]
     [SerializeField] private GameObject arrowPrefab;
@@ -12,39 +11,69 @@ public class AttackManager : MonoBehaviour
     [SerializeField] private Transform target;
     [SerializeField] private float attackInterval = 0.6f;
     [SerializeField] private float idleEps = 0.02f;
+    [SerializeField, Min(0.05f)] float attackClipLength = 0.7f;
 
+    private PlayerController playerController;
+    private SkillManager skillManager;
     private Rigidbody2D rb;
+    private Animator animator;
+    
     private float timer;
+    private bool armed = true;
 
     private void Awake()
     {
-        rb = GetComponent<Rigidbody2D>();
+        playerController = GetComponent<PlayerController>();
         skillManager = GetComponentInChildren<SkillManager>();
+        rb = GetComponent<Rigidbody2D>();
+
+        animator = GetComponent<Animator>();
     }
 
     private void Update()
     {
-        if (skillManager.IsCasting) return;
+        if (skillManager.IsCasting || playerController.IsMoving || !playerController.IsGround || playerController.IsRoot)
+        {
+            armed = false;
+            return;
+        }
         
         timer += Time.deltaTime;
-        bool isIdle = !rb || Mathf.Abs(rb.velocity.x) <= idleEps;
+        bool isIdle = Mathf.Abs(rb.velocity.x) <= idleEps;
 
         if (isIdle && timer >= attackInterval)
         {
-            AutoAttack();
+            animator.speed = Mathf.Max(0.01f, attackClipLength / Mathf.Max(0.01f, attackInterval));
+            animator.ResetTrigger(FIRE);
+            animator.SetTrigger(FIRE);
+            
+            armed = true;
+        }
+        
+        var st = animator.GetCurrentAnimatorStateInfo(0);
+        if (armed && st.IsName("Fire") && st.normalizedTime >= 0.8f)
+        {
+            armed = false;
             timer = 0f;
+            
+            AutoAttack();
         }
     }
 
-    private void AutoAttack()
+    public void AutoAttack()
     {
         // 화살 생성 및 궤적 세팅
-        var go  = Instantiate(arrowPrefab, muzzle.position, Quaternion.identity);
+        var go  = Instantiate(arrowPrefab, muzzle.position, muzzle.rotation);
         var proj = go.GetComponent<ArrowController>();
 
         var soInstance = Instantiate(trajectorySO);
 
         proj.BeginCollisionDelay();
         proj.SetupTrajectory(soInstance, muzzle.position, target);
+    }
+
+    public GameObject GetArrowPrefab()
+    {
+        return arrowPrefab;
     }
 }
