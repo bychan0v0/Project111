@@ -65,6 +65,13 @@ public class PullAnchor : MonoBehaviour
                     var player = target.GetComponent<PlayerController>();
                     player.StartRoot(rootDuration);
                     
+                    HitUIRoot.Instance?.ShowStatusOver(
+                        target,        // 맞은 대상 Transform
+                        "Root",         // 표시할 텍스트
+                        rootDuration,          // 지속시간
+                        new Vector3(0f, 1f, 0f) // 머리 위 오프셋(캐릭터 키에 맞춰 조정)
+                    );
+                    
                     // 한번 발동 후, 다시 누적하려면 타이머 초기화(원한다면 그대로 유지도 가능)
                     contactTimer = 0f;
                     targetInRootZone = false; // 재발동은 존을 다시 벗어나고 들어오면 가능

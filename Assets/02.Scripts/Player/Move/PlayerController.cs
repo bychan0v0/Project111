@@ -40,7 +40,7 @@ public class PlayerController : MonoBehaviour
     {
         UpdateGrounded();
 
-        if (!isGround || skillManager.IsCasting)
+        if (!isGround || skillManager.IsCasting || isRoot)
         {
             rb.velocity = new Vector2(0f, rb.velocity.y);
             SetRun(false);
