@@ -46,8 +46,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   arrowPrefab: {fileID: 3734133858967969745, guid: 8b4e2d282472a814f9728e04fa92e58a, type: 3}
   trajectorySO: {fileID: 11400000, guid: ae62da4075ca5b040b5073380740e63f, type: 2}
-  jumpImpulse: 7.5
-  totalFlipTime: 0.9
-  arrowCount: 3
-  burstInterval: 0.06
-  burstDelay: 0.75
+  duration: 2

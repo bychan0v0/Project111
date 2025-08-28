@@ -47,7 +47,7 @@ MonoBehaviour:
   arrowPrefab: {fileID: 3734133858967969745, guid: 8b4e2d282472a814f9728e04fa92e58a, type: 3}
   trajectorySO: {fileID: 11400000, guid: 209ced58f0571f4428abceec19d8f91a, type: 2}
   jumpImpulse: 12.5
-  totalFlipTime: 1.25
+  totalFlipTime: 1.5
   arrowCount: 3
   burstInterval: 0.2
   burstDelay: 0.5

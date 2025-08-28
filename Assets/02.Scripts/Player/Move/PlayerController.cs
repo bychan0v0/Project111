@@ -20,6 +20,8 @@ public class PlayerController : MonoBehaviour
     private IMoveInput input;
     private SkillManager skillManager;
     
+    public bool IsGround => isGround;
+    
     private void Awake()
     {
         col = GetComponent<Collider2D>();
