@@ -7,32 +7,51 @@ using UnityEngine.UI;
 public class StatusBadge : MonoBehaviour
 {
     [SerializeField] private TMP_Text label;
-    [SerializeField] private Image fill;     // type=Filled
-    [SerializeField] private Color readyColor = Color.white;
-    [SerializeField] private Color tickingColor = new Color(1, .6f, .2f);
+    [SerializeField] private Image fill;
+    [SerializeField] private Vector2 screenOffset = new Vector2(0, 24);
 
+    RectTransform rt;
+    Transform target;
+    Vector3 worldOffset;
+    Camera cam;
+    
     float duration, remain;
 
-    public void Setup(string text, float duration)
+    public void Setup(Transform target, Vector3 worldOffset, string text, float duration, Camera cam)
     {
+        this.target = target;
+        this.worldOffset = worldOffset;
         this.duration = Mathf.Max(0.0001f, duration);
-        remain = this.duration;
-        label.text = text;
-        fill.fillAmount = 1f;
-        fill.color = tickingColor;
+        this.remain = this.duration;
+        this.cam = cam ? cam : Camera.main;
+
+        rt = (RectTransform)transform;
+        if (label) label.text = text;
+        if (fill)  fill.fillAmount = 1f;
+
+        // 첫 프레임 위치 보정
+        UpdatePositionImmediate();
     }
 
-    private void Update()
+    private void LateUpdate()
     {
+        if (target == null) { Destroy(gameObject); return; }
+
+        // 위치 추적
+        UpdatePositionImmediate();
+
+        // 시간/게이지
         remain -= Time.deltaTime;
-        fill.fillAmount = Mathf.Clamp01(remain / duration);
+        if (fill) fill.fillAmount = Mathf.Clamp01(remain / duration);
 
         if (remain <= 0f)
-        {
-            // 끝나면 자연스런 정리
-            fill.color = readyColor;
             Destroy(gameObject);
-        }
     }
 
+    private void UpdatePositionImmediate()
+    {
+        Vector3 worldPos = target.position + worldOffset;
+        Vector2 screenPos = RectTransformUtility.WorldToScreenPoint(cam, worldPos);
+        rt.position = screenPos + screenOffset;
+    }
 }

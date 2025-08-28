@@ -226,8 +226,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   label: {fileID: 1731579524878620612}
   fill: {fileID: 7487344797179113972}
-  readyColor: {r: 1, g: 1, b: 1, a: 1}
-  tickingColor: {r: 1, g: 0.6, b: 0.2, a: 1}
+  screenOffset: {x: 0, y: 16}
 --- !u!1 &8783264392237506740
 GameObject:
   m_ObjectHideFlags: 0

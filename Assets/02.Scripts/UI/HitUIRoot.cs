@@ -7,9 +7,9 @@ public class HitUIRoot : MonoBehaviour
     public static HitUIRoot Instance { get; private set; }
 
     [Header("Prefabs")]
-    [SerializeField] private DamagePopup popupPrefab;  // ¾Æ·¡ ½ºÅ©¸³Æ®
-    [SerializeField] private StatusBadge badgePrefab;  // ¾Æ·¡ ½ºÅ©¸³Æ®
-    [SerializeField] private Transform badgeContainer; // HUD ¾ÈÀÇ ½ºÅÃ ÆÐ³Î
+    [SerializeField] private DamagePopup popupPrefab;  // ï¿½Æ·ï¿½ ï¿½ï¿½Å©ï¿½ï¿½Æ®
+    [SerializeField] private StatusBadge badgePrefab;  // ï¿½Æ·ï¿½ ï¿½ï¿½Å©ï¿½ï¿½Æ®
+    [SerializeField] private Transform badgeContainer; // HUD ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ð³ï¿½
 
     Camera cam;
     Canvas canvas;
@@ -22,18 +22,18 @@ public class HitUIRoot : MonoBehaviour
         cam = Camera.main;
     }
 
-    public void ShowDamage(int amount, Vector3 worldPos, bool isCrit = false)
+    public void ShowDamage(int amount, Vector3 worldPos)
     {
         if (!popupPrefab) return;
         var pop = Instantiate(popupPrefab, canvas.transform);
         Vector2 screen = RectTransformUtility.WorldToScreenPoint(cam, worldPos);
-        pop.Setup(amount, isCrit, screen);
+        pop.Setup(amount, screen);
     }
 
-    public void ShowStatus(string text, float duration)
+    public void ShowStatusOver(Transform target, string text, float duration, Vector3 worldOffset)
     {
-        if (!badgePrefab || !badgeContainer) return;
-        var badge = Instantiate(badgePrefab, badgeContainer);
-        badge.Setup(text, duration);
+        if (!badgePrefab || !target) return;
+        var ui = Instantiate(badgePrefab, canvas.transform);
+        ui.Setup(target, worldOffset, text, duration, cam);
     }
 }

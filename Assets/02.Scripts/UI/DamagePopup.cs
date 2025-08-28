@@ -16,7 +16,7 @@ public class DamagePopup : MonoBehaviour
     Vector2 startScreenPos;
     float t;
 
-    public void Setup(int amount, bool isCrit, Vector2 screenPos)
+    public void Setup(int amount, Vector2 screenPos)
     {
         rt = (RectTransform)transform;
         cg = GetComponent<CanvasGroup>();
@@ -25,8 +25,7 @@ public class DamagePopup : MonoBehaviour
         startScreenPos = screenPos;
         rt.position = screenPos;
 
-        label.text = isCrit ? $"<b>{amount}</b>" : amount.ToString();
-        if (isCrit) label.color = new Color(1f, .85f, .2f); // ¿øÇÏ¸é ´Ù¸¥ »ö
+        label.text = amount.ToString();
         t = 0f;
     }
 
@@ -35,7 +34,7 @@ public class DamagePopup : MonoBehaviour
         t += Time.deltaTime;
         float p = Mathf.Clamp01(t / duration);
 
-        // À§·Î »ìÂ¦ ÀÌµ¿ + ½ºÄÉÀÏ/Åõ¸íµµ
+        // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Â¦ ï¿½Ìµï¿½ + ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½/ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
         rt.position = startScreenPos + Vector2.up * (risePixels * p);
         rt.localScale = Vector3.one * scale.Evaluate(p);
         cg.alpha = alpha.Evaluate(p);

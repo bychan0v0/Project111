@@ -1052,9 +1052,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9c87e2f94c87b4d43a452375668256a8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  popupPrefab: {fileID: 0}
-  badgePrefab: {fileID: 0}
-  badgeContainer: {fileID: 0}
+  popupPrefab: {fileID: -4877709105772221060, guid: 44784040cd6ec614eb83c13930a78199, type: 3}
+  badgePrefab: {fileID: 5051859150304148900, guid: e747ea700f836ec40b398a6bb6781d4c, type: 3}
+  badgeContainer: {fileID: 340106179}
 --- !u!1 &350717324
 GameObject:
   m_ObjectHideFlags: 0

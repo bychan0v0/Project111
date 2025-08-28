@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: SkillData_Silence
   m_EditorClassIdentifier: 
   skillId: Skill_Silence
-  cooldown: 10
+  cooldown: 8
   prefab: {fileID: 4993487510305478498, guid: 2c1c4a281b69e2c40a5f8a4dcd9e0893, type: 3}

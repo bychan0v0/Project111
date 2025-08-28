@@ -32,6 +32,7 @@ public class ArrowDamageBinder : MonoBehaviour
             }
             
             dmg.TakeDamage(Damage);
+            HitUIRoot.Instance?.ShowDamage(Damage, hitPoint);
         }
     }
 }

@@ -44,6 +44,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dfaf08704dec30143830a85213219689, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  arrowPrefab: {fileID: 3734133858967969745, guid: 8b4e2d282472a814f9728e04fa92e58a, type: 3}
   trajectorySO: {fileID: 11400000, guid: ae62da4075ca5b040b5073380740e63f, type: 2}
-  duration: 2
+  duration: 3

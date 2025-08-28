@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: SkillData_PullAnchor
   m_EditorClassIdentifier: 
   skillId: Skill_PullAnchor
-  cooldown: 10
+  cooldown: 12
   prefab: {fileID: 4993487510305478498, guid: 244e043a6a80e3149ad6c49016f6b5d6, type: 3}
