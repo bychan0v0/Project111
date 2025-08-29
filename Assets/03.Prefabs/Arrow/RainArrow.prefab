@@ -16,7 +16,7 @@ GameObject:
   - component: {fileID: 1059474657410343797}
   - component: {fileID: 5043203872741373462}
   m_Layer: 0
-  m_Name: Arrow_AI
+  m_Name: RainArrow
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -79,7 +79,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_Sprite: {fileID: 287372908, guid: ce0c8dfeb8230624ea032bb60b69359b, type: 3}
-  m_Color: {r: 1, g: 0, b: 0, a: 1}
+  m_Color: {r: 1, g: 0.4554584, b: 0, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -182,7 +182,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dfbacacd108a99d42968ea29f44cd14e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  defaultDamage: 10
+  defaultDamage: 30
 --- !u!114 &5043203872741373462
 MonoBehaviour:
   m_ObjectHideFlags: 0

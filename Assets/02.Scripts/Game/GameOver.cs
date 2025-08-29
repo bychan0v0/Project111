@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -25,8 +24,13 @@ public class GameOver : MonoBehaviour
     [SerializeField] private float matchDuration = 90f;
     [SerializeField] private float meteorTime = 90f;
 
+    [Header("Sudden Death")]
+    [SerializeField] private bool useSuddenDeath = true;
+    [SerializeField] private string suddenDeathLabel = "SD";
+
     private bool ended;
     private bool started;
+    private bool suddenDeathActive;
     private float remain;
     private Coroutine timerCo;
 
@@ -40,6 +44,13 @@ public class GameOver : MonoBehaviour
     {
         left.OnDied  -= OnLeftDied;
         right.OnDied -= OnRightDied;
+
+        // 에러 방지용 정리
+        if (suddenDeathActive)
+        {
+            SuddenDeathManager.Instance?.End();
+            suddenDeathActive = false;
+        }
     }
 
     public void StartMatch()
@@ -47,6 +58,7 @@ public class GameOver : MonoBehaviour
         if (started) return;
         started = true;
         ended = false;
+        suddenDeathActive = false;
 
         remain = matchDuration;
         UpdateTimerUI(remain);
@@ -60,10 +72,13 @@ public class GameOver : MonoBehaviour
         while (!ended && remain > 0f)
         {
             remain -= Time.deltaTime;
+
+            // 네가 쓰는 메테오 트리거 유지
             if (remain <= meteorTime)
             {
                 MeteorEventManager.Instance.TriggerEvent();
             }
+
             if (remain < 0f) remain = 0f;
             UpdateTimerUI(remain);
             yield return null;
@@ -71,6 +86,15 @@ public class GameOver : MonoBehaviour
 
         if (!ended)
         {
+            if (useSuddenDeath)
+            {
+                suddenDeathActive = true;
+                if (timerText) timerText.text = suddenDeathLabel;
+                SuddenDeathManager.Instance?.Begin();
+
+                yield break;
+            }
+
             var winner = DecideByHp();
             StartCoroutine(ShowResultAfter(winner));
             ended = true;
@@ -80,7 +104,7 @@ public class GameOver : MonoBehaviour
     private void UpdateTimerUI(float sec)
     {
         int s = Mathf.CeilToInt(sec);
-        timerText.text = $"{s}";
+        if (timerText) timerText.text = $"{s}";
     }
 
     private PlayerHp DecideByHp()
@@ -92,8 +116,8 @@ public class GameOver : MonoBehaviour
         return null;
     }
 
-    private void OnLeftDied()  => EndByDeath(loserAnim:leftAnim,  winner:right);
-    private void OnRightDied() => EndByDeath(loserAnim:rightAnim, winner:left);
+    private void OnLeftDied()  => EndByDeath(loserAnim: leftAnim,  winner: right);
+    private void OnRightDied() => EndByDeath(loserAnim: rightAnim, winner: left);
 
     private void EndByDeath(Animator loserAnim, PlayerHp winner)
     {
@@ -101,6 +125,12 @@ public class GameOver : MonoBehaviour
         ended = true;
 
         if (timerCo != null) StopCoroutine(timerCo);
+
+        if (suddenDeathActive)
+        {
+            SuddenDeathManager.Instance?.End();
+            suddenDeathActive = false;
+        }
 
         if (loserAnim && !string.IsNullOrEmpty(dieTrigger))
         {
@@ -114,8 +144,8 @@ public class GameOver : MonoBehaviour
     {
         yield return new WaitForSecondsRealtime(showAfterSeconds);
 
-        resultPanel.SetActive(true);
-        resultText.text = winner ? $"{winner.name} Win!" : "Draw!";
+        if (resultPanel) resultPanel.SetActive(true);
+        if (resultText)  resultText.text = winner ? $"{winner.name} Win!" : "Draw!";
 
         Time.timeScale = 0f;
     }
