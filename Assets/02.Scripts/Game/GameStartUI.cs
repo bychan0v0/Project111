@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
 
 public class GameStartUI : MonoBehaviour
@@ -15,6 +16,9 @@ public class GameStartUI : MonoBehaviour
     [SerializeField] private int countdownSeconds = 3;
     [SerializeField] private float goFlashTime = 0.6f;
 
+    [Header("Events")]
+    [SerializeField] private UnityEvent onGameStart;
+
     private bool started;
 
     private void Awake()
@@ -25,6 +29,11 @@ public class GameStartUI : MonoBehaviour
 
         // 게임 정지 (카운트다운은 Realtime으로 진행)
         Time.timeScale = 0f;
+    }
+
+    private void OnDestroy()
+    {
+        startButton.onClick.RemoveListener(OnStartClicked);
     }
 
     private void OnStartClicked()
@@ -50,6 +59,9 @@ public class GameStartUI : MonoBehaviour
         yield return new WaitForSecondsRealtime(goFlashTime);
 
         countdownText.gameObject.SetActive(false);
+
+        // ★ 게임 시작: 타임스케일 복구 + 이벤트 발행
         Time.timeScale = 1f;
+        onGameStart?.Invoke();
     }
 }

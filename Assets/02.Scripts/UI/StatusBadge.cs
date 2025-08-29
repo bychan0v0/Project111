@@ -1,21 +1,22 @@
-using System.Collections;
-using System.Collections.Generic;
-using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using System;
+using TMPro;
 
 public class StatusBadge : MonoBehaviour
 {
-    [SerializeField] private TMP_Text label;
-    [SerializeField] private Image fill;
-    [SerializeField] private Vector2 screenOffset = new Vector2(0, 24);
+    [SerializeField] private TMP_Text label;   // TMP 쓰면 TMP_Text
+    [SerializeField] private Image fill;    // type = Filled
+
+    public event Action OnDisposed;         // 루트에 알려줄 콜백
 
     RectTransform rt;
     Transform target;
     Vector3 worldOffset;
     Camera cam;
-    
+
     float duration, remain;
+    float stackPixelYOffset = 0f;           // ← 스택용 픽셀 오프셋
 
     public void Setup(Transform target, Vector3 worldOffset, string text, float duration, Camera cam)
     {
@@ -29,13 +30,19 @@ public class StatusBadge : MonoBehaviour
         if (label) label.text = text;
         if (fill)  fill.fillAmount = 1f;
 
-        // 첫 프레임 위치 보정
         UpdatePositionImmediate();
     }
 
-    private void LateUpdate()
+    // ★ HitUIRoot가 인덱스 바뀔 때마다 호출
+    public void SetStackOffset(float pixelYOffset)
     {
-        if (target == null) { Destroy(gameObject); return; }
+        stackPixelYOffset = pixelYOffset;
+        UpdatePositionImmediate();
+    }
+
+    void LateUpdate()
+    {
+        if (target == null) { Dispose(); return; }
 
         // 위치 추적
         UpdatePositionImmediate();
@@ -45,13 +52,20 @@ public class StatusBadge : MonoBehaviour
         if (fill) fill.fillAmount = Mathf.Clamp01(remain / duration);
 
         if (remain <= 0f)
-            Destroy(gameObject);
+            Dispose();
     }
 
-    private void UpdatePositionImmediate()
+    void UpdatePositionImmediate()
     {
+        if (!rt || !cam || target == null) return;
         Vector3 worldPos = target.position + worldOffset;
         Vector2 screenPos = RectTransformUtility.WorldToScreenPoint(cam, worldPos);
-        rt.position = screenPos + screenOffset;
+        rt.position = screenPos + new Vector2(0f, stackPixelYOffset);
+    }
+
+    void Dispose()
+    {
+        OnDisposed?.Invoke();
+        Destroy(gameObject);
     }
 }

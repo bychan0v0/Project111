@@ -44,10 +44,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c90910ba812559a47b239c58a2babd06, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  arrowPrefab: {fileID: 3734133858967969745, guid: 8b4e2d282472a814f9728e04fa92e58a, type: 3}
   trajectorySO: {fileID: 11400000, guid: 02d57842e9144e84bba9dfe398358ace, type: 2}
-  pullAnchorPrefab: {fileID: 7394401138465626604, guid: 1852af6e86dc66f499c6d35391f16d84, type: 3}
+  pullAnchorPrefab: {fileID: 5824670795371433373, guid: f6fd568b816c64943a44efc3add3a881, type: 3}
   groundMask:
     serializedVersion: 2
     m_Bits: 64
-  groundRayDistance: 5
+  groundRayDistance: 10

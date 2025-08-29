@@ -15,7 +15,7 @@ public class SkillAction_PullAnchor : SkillActionBase
     {
         ctx.skillManager?.EnterCast();
         
-        FireOneArrow(ctx);
+        FireOneArrow(ctx, arrowPrefab);
         
         ctx.skillManager?.ExitCast();
     }

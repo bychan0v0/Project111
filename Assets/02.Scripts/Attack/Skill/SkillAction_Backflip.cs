@@ -40,7 +40,7 @@ public class SkillAction_Backflip : SkillActionBase
         // 3) 회전하는 동안 3발 간격 발사
         for (int i = 0; i < arrowCount; i++)
         {
-            FireOneArrow(ctx);
+            FireOneArrow(ctx, arrowPrefab);
             if (i < arrowCount - 1 && burstInterval > 0f)
                 yield return new WaitForSeconds(burstInterval);
         }

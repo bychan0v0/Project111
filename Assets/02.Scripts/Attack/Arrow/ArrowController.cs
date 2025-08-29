@@ -11,7 +11,7 @@ public class ArrowController : MonoBehaviour
     [Header("Fade")]
     [SerializeField] private float fadeDuration = 0.25f;
     
-    private float collisionDelay = 0.5f;
+    private float collisionDelay = 0.25f;
     
     private TrajectorySO trajectorySO;
     private Rigidbody2D rb;

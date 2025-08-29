@@ -21,7 +21,7 @@ public abstract class SkillActionBase : MonoBehaviour, ISkillBehaviour
         arrowPrefab = attackManager.GetArrowPrefab();
     }
     
-    protected void FireOneArrow(in SkillContext ctx)
+    protected void FireOneArrow(in SkillContext ctx, GameObject arrowPrefab)
     {
         // 화살 생성 + 궤적 세팅(화살마다 SO 인스턴스 독립)
         var go = Instantiate(arrowPrefab, ctx.muzzle.position, ctx.muzzle.rotation);
@@ -36,6 +36,12 @@ public abstract class SkillActionBase : MonoBehaviour, ISkillBehaviour
             var context = ctx;
             proj.OnFirstHit += (hitPoint, hitCol) => OnArrowHit(context, hitPoint, hitCol);
         }
+    }
+    
+    protected bool IsHitTarget(in SkillContext ctx, Collider2D hitCol)
+    {
+        if (!hitCol || !ctx.target) return false;
+        return hitCol.transform.root == ctx.target.transform.root;
     }
     
     public abstract void Execute(in SkillContext ctx);

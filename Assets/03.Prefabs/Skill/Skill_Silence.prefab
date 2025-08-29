@@ -45,4 +45,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   trajectorySO: {fileID: 11400000, guid: ae62da4075ca5b040b5073380740e63f, type: 2}
+  silenceArrowPrefab: {fileID: 3734133858967969745, guid: dc32156ba04e57b46bbfcbbe323a067d, type: 3}
   duration: 3

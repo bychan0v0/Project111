@@ -8,6 +8,9 @@ public class SkillAction_Silence : SkillActionBase
 {
     private static readonly int SILENCE = Animator.StringToHash("Silence");
 
+    [Header("Custom Arrow")]
+    [SerializeField] private GameObject silenceArrowPrefab;
+    
     [Header("Silence Duration")]
     [SerializeField] private float duration;
     
@@ -23,7 +26,7 @@ public class SkillAction_Silence : SkillActionBase
             var st = animator.GetCurrentAnimatorStateInfo(0);
             if (st.IsName("Silence") && st.normalizedTime >= 0.8f)
             {
-                FireOneArrow(ctx);
+                FireOneArrow(ctx, silenceArrowPrefab);
                 break;
             }
             
