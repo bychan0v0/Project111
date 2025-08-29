@@ -6,8 +6,8 @@ using UnityEngine;
 
 public class SkillData : ScriptableObject
 {
-    public string skillId;    // 유니크 키
-    public float cooldown = 1f;    // 쿨다운
-    public GameObject prefab;    // 실행할 프리팹 (투사체 등)
+    public string skillId;
+    public float cooldown = 1f;
+    public GameObject prefab;
 }
     

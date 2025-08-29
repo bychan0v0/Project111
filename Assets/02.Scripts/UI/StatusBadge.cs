@@ -5,10 +5,10 @@ using TMPro;
 
 public class StatusBadge : MonoBehaviour
 {
-    [SerializeField] private TMP_Text label;   // TMP 쓰면 TMP_Text
-    [SerializeField] private Image fill;    // type = Filled
+    [SerializeField] private TMP_Text label;
+    [SerializeField] private Image fill;
 
-    public event Action OnDisposed;         // 루트에 알려줄 콜백
+    public event Action OnDisposed;
 
     RectTransform rt;
     Transform target;
@@ -16,7 +16,7 @@ public class StatusBadge : MonoBehaviour
     Camera cam;
 
     float duration, remain;
-    float stackPixelYOffset = 0f;           // ← 스택용 픽셀 오프셋
+    float stackPixelYOffset = 0f;
 
     public void Setup(Transform target, Vector3 worldOffset, string text, float duration, Camera cam)
     {

@@ -8,32 +8,65 @@ public class AIInput : MonoBehaviour, IMoveInput
     [SerializeField] private float rightLimit = 8.5f;
     [SerializeField] private int dir = 0;
 
-    // === 추가: 외부가 잠깐 방향/정지 지시 ===
     private bool overrideActive;
     private float overrideUntil;
+
+    private bool noGoActive;
+    private Bounds noGoBounds;
+    private float noGoPad;
+    private float noGoUntil;
 
     public void SetDir(int d, float duration = 0f)
     {
         overrideActive = true;
         overrideUntil  = (duration > 0f) ? Time.time + duration : 0f;
-        dir = Mathf.Clamp(d, -1, 1); // -1,0,+1
+        dir = Mathf.Clamp(d, -1, 1);
+    }
+
+    public void SetNoGoZone(Bounds zoneWorldBounds, float pad = 0.75f, float duration = 2.0f)
+    {
+        noGoActive = true;
+        noGoBounds = zoneWorldBounds;
+        noGoPad    = Mathf.Max(0f, pad);
+        noGoUntil  = (duration > 0f) ? Time.time + duration : 0f;
     }
 
     public float GetMoveX()
     {
-        // 평소: 좌우 한계에서 왕복
-        if (transform.position.x >= rightLimit) return -1;
-        if (transform.position.x <= leftLimit) return 1;
-        
-        // 외부 지시 유지 시간 처리
+        float x = transform.position.x;
+
+        if (x >= rightLimit) return -1;
+        if (x <= leftLimit)  return  1;
+
+        if (noGoActive)
+        {
+            if (noGoUntil > 0f && Time.time >= noGoUntil)
+            {
+                noGoActive = false;
+            }
+            else
+            {
+                float left  = noGoBounds.min.x - noGoPad;
+                float right = noGoBounds.max.x + noGoPad;
+
+                if (x > left && x < right)
+                {
+                    float distToLeft  = x - left;
+                    float distToRight = right - x;
+                    int away = (distToLeft < distToRight) ? -1 : +1;
+                    return away;
+                }
+            }
+        }
+
         if (overrideActive)
         {
             if (overrideUntil > 0f && Time.time >= overrideUntil)
-                overrideActive = false; // 만료
+                overrideActive = false;
             else
-                return dir; // 외부 지시 우선
+                return dir;
         }
-        
+
         return dir;
     }
 }

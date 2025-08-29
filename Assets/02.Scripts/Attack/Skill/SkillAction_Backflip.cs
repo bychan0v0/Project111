@@ -9,13 +9,13 @@ public class SkillAction_Backflip : SkillActionBase
     private static readonly int BACKFLIP = Animator.StringToHash("Backflip");
 
     [Header("Flip Motion")]
-    [SerializeField, Min(0f)] private float jumpImpulse = 7.5f;   // 위로 튀어오를 힘
-    [SerializeField, Min(0.2f)] private float totalFlipTime = 0.9f;   // 총 3바퀴 시간(빠르게)
+    [SerializeField, Min(0f)] private float jumpImpulse = 7.5f;
+    [SerializeField, Min(0.2f)] private float totalFlipTime = 0.9f;
 
     [Header("Volley")]
-    [SerializeField, Min(1)] private int arrowCount = 3;   // 항상 3발
-    [SerializeField, Min(0f)] private float burstInterval = 0.06f;   // 3발 간 간격
-    [SerializeField, Min(0f)] private float burstDelay = 0.75f;   // 발사 대기 시간
+    [SerializeField, Min(1)] private int arrowCount = 3;
+    [SerializeField, Min(0f)] private float burstInterval = 0.06f;
+    [SerializeField, Min(0f)] private float burstDelay = 0.75f;
 
     private IEnumerator DoFlipAndVolley(SkillContext ctx)
     {
@@ -24,12 +24,10 @@ public class SkillAction_Backflip : SkillActionBase
         animator.ResetTrigger(BACKFLIP);
         animator.SetTrigger(BACKFLIP);
         
-        // 1) 점프 임펄스
         var rb = ctx.rb;
         rb.velocity = new Vector2(rb.velocity.x, 0f);
         rb.AddForce(Vector2.up * jumpImpulse, ForceMode2D.Impulse);
         
-        // 2) 시각 메쉬만 1080°(3회전) ? Z축 기준(2D)
         var spinTarget = ctx.caster;
         spinTarget
             .DOLocalRotate(new Vector3(0f, 0f, 1080f), totalFlipTime, RotateMode.LocalAxisAdd)
@@ -37,7 +35,6 @@ public class SkillAction_Backflip : SkillActionBase
 
         yield return new WaitForSeconds(burstDelay);
         
-        // 3) 회전하는 동안 3발 간격 발사
         for (int i = 0; i < arrowCount; i++)
         {
             FireOneArrow(ctx, arrowPrefab);
@@ -45,7 +42,6 @@ public class SkillAction_Backflip : SkillActionBase
                 yield return new WaitForSeconds(burstInterval);
         }
 
-        // 4) 회전 각 정리
         var e = spinTarget.localEulerAngles;
         spinTarget.localEulerAngles = new Vector3(e.x, e.y, Mathf.Repeat(e.z, 360f));
         

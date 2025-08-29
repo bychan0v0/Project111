@@ -14,7 +14,7 @@ public class Meteor : MonoBehaviour
     private Rigidbody2D rb;
     
     private Vector3 target;
-    private BoxCollider2D zoneCol;            // DangerZone 트리거 (정답 범위)
+    private BoxCollider2D zoneCol;
     private LayerMask playerMask;
     private LayerMask groundMask;
     private System.Action onAfterImpact;
@@ -34,6 +34,8 @@ public class Meteor : MonoBehaviour
         this.groundMask = groundMask;
         this.onAfterImpact = onAfterImpact;
         falling = true;
+        
+        CameraShaker.Instance?.Begin(0.12f, 18f);
     }
 
     private void Awake() => rb = GetComponent<Rigidbody2D>();
@@ -53,6 +55,9 @@ public class Meteor : MonoBehaviour
         if (!falling) return;
         falling = false;
 
+        CameraShaker.Instance?.OneShot(0.45f,  0.22f, 22f);
+        CameraShaker.Instance?.Stop();
+        
         Vector2 hitPoint = collision.GetContact(0).point;
         var fx = Instantiate(impactFxPrefab, hitPoint, Quaternion.identity);
         var ps = fx.GetComponent<ParticleSystem>();
@@ -63,11 +68,9 @@ public class Meteor : MonoBehaviour
             Destroy(fx, life);
         }
         
-        // 충돌 위치를 DangerZone 중심으로 스냅(시각/판정 정렬)
         var zb = zoneCol.bounds;
         transform.position = zb.center;
 
-        // === 1) 플레이어 즉사 ===
         var list = new List<Collider2D>();
         var pf = new ContactFilter2D { useTriggers = false };
         pf.SetLayerMask(playerMask);
@@ -79,7 +82,6 @@ public class Meteor : MonoBehaviour
         }
         list.Clear();
 
-        // === 2) Ground 파괴 (오브젝트형) ===
         var gf = new ContactFilter2D { useTriggers = false };
         gf.SetLayerMask(groundMask);
         zoneCol.OverlapCollider(gf, list);
@@ -89,7 +91,6 @@ public class Meteor : MonoBehaviour
         }
         list.Clear();
 
-        // === 3) 투명 벽(Blocker) 생성 ===
         CreateInvisibleBlocker(zb);
 
         onAfterImpact?.Invoke();
@@ -98,22 +99,19 @@ public class Meteor : MonoBehaviour
 
     private void CreateInvisibleBlocker(Bounds worldBounds)
     {
-        // 살짝 확장해서 미세한 틈 방지
         var size = worldBounds.size + new Vector3(blockerSkin, blockerSkin + 10f, 0f);
         var center = worldBounds.center;
 
         GameObject blocker = new GameObject("MeteorVoidBlocker");
 
-        // 위치/스케일(부모 스케일 영향 방지)
         blocker.transform.SetParent(null);
         blocker.transform.position = new Vector3(center.x, center.y, 0f);
         blocker.transform.rotation = Quaternion.identity;
         blocker.transform.localScale = Vector3.one;
 
-        // 실제 충돌체
         var bc = blocker.AddComponent<BoxCollider2D>();
         bc.isTrigger = false;
-        bc.size = size; // 월드 기준 크기
+        bc.size = size;
     }
     
     private bool IsInMask(int layer, LayerMask mask) => (mask.value & (1 << layer)) != 0;

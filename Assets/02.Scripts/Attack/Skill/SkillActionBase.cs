@@ -23,7 +23,6 @@ public abstract class SkillActionBase : MonoBehaviour, ISkillBehaviour
     
     protected void FireOneArrow(in SkillContext ctx, GameObject arrowPrefab)
     {
-        // 화살 생성 + 궤적 세팅(화살마다 SO 인스턴스 독립)
         var go = Instantiate(arrowPrefab, ctx.muzzle.position, ctx.muzzle.rotation);
         var proj = go.GetComponent<ArrowController>();
         var soInstance = Instantiate(trajectorySO);

@@ -13,7 +13,7 @@ public class HpBar : MonoBehaviour
     void OnEnable()
     {
         health.OnChanged += Refresh;
-        Refresh(health.CurrentHP, health.MaxHP); // 최초 1회 강제 갱신
+        Refresh(health.CurrentHP, health.MaxHP);
     }
 
     void OnDisable()

@@ -19,7 +19,6 @@ public class PlayerInput : MonoBehaviour, IMoveInput
         }
     }
 
-    // UI 버튼 연결도 가능
     public void OnLeftDown()
     {
         x = -1f;

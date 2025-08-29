@@ -27,7 +27,6 @@ public class GameStartUI : MonoBehaviour
         countdownText.gameObject.SetActive(false);
         startButton.onClick.AddListener(OnStartClicked);
 
-        // 게임 정지 (카운트다운은 Realtime으로 진행)
         Time.timeScale = 0f;
     }
 
@@ -60,7 +59,6 @@ public class GameStartUI : MonoBehaviour
 
         countdownText.gameObject.SetActive(false);
 
-        // ★ 게임 시작: 타임스케일 복구 + 이벤트 발행
         Time.timeScale = 1f;
         onGameStart?.Invoke();
     }

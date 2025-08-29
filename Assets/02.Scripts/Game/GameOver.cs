@@ -42,7 +42,6 @@ public class GameOver : MonoBehaviour
         right.OnDied -= OnRightDied;
     }
 
-    // === GameStartUI에서 카운트다운 끝나면 이걸 호출 ===
     public void StartMatch()
     {
         if (started) return;
@@ -72,7 +71,6 @@ public class GameOver : MonoBehaviour
 
         if (!ended)
         {
-            // 시간 만료: 체력 비교로 승자 결정
             var winner = DecideByHp();
             StartCoroutine(ShowResultAfter(winner));
             ended = true;
@@ -104,13 +102,11 @@ public class GameOver : MonoBehaviour
 
         if (timerCo != null) StopCoroutine(timerCo);
 
-        // 패배 애니만 트리거(간단 유지)
         if (loserAnim && !string.IsNullOrEmpty(dieTrigger))
         {
             loserAnim.SetTrigger(dieTrigger);
         }
         
-
         StartCoroutine(ShowResultAfter(winner));
     }
 
@@ -121,7 +117,6 @@ public class GameOver : MonoBehaviour
         resultPanel.SetActive(true);
         resultText.text = winner ? $"{winner.name} Win!" : "Draw!";
 
-        // 완전 정지 필요하면 여기서 정지
         Time.timeScale = 0f;
     }
 }

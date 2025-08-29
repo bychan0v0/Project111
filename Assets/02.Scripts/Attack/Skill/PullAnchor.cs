@@ -44,13 +44,11 @@ public class PullAnchor : MonoBehaviour
             Vector2 toAnchor = (Vector2)transform.position - targetRb.position;
             float dist = toAnchor.magnitude;
 
-            // 범위 안이고, 스냅 거리보다 멀 때만 힘 적용
             if (dist <= pullRadius)
             {
                 Vector2 dir = toAnchor / Mathf.Max(dist, 0.0001f);
-                float vDot  = Vector2.Dot(targetRb.velocity, dir); // 앵커 쪽(+) / 반대(-)
+                float vDot  = Vector2.Dot(targetRb.velocity, dir);
 
-                // 도망( vDot < 0 )일 때만 감쇠, 앵커 쪽으로 가면 감쇠 0
                 Vector2 force = dir * (pullStrength - Mathf.Min(0f, vDot) * damping);
                 targetRb.AddForce(force, ForceMode2D.Force);
             }
@@ -59,22 +57,20 @@ public class PullAnchor : MonoBehaviour
             {
                 contactTimer += Time.fixedDeltaTime;
 
-                // 충분히 오래 접촉했다 → 루트 발동
                 if (contactTimer >= rootChargeTime)
                 {
                     var player = target.GetComponent<PlayerController>();
                     player.StartRoot(rootDuration);
                     
                     HitUIRoot.Instance?.ShowStatusOver(
-                        target,        // 맞은 대상 Transform
-                        "Root",         // 표시할 텍스트
-                        rootDuration,          // 지속시간
-                        new Vector3(0f, 1f, 0f) // 머리 위 오프셋(캐릭터 키에 맞춰 조정)
+                        target,
+                        "Root",
+                        rootDuration,
+                        new Vector3(0f, 1f, 0f)
                     );
                     
-                    // 한번 발동 후, 다시 누적하려면 타이머 초기화(원한다면 그대로 유지도 가능)
                     contactTimer = 0f;
-                    targetInRootZone = false; // 재발동은 존을 다시 벗어나고 들어오면 가능
+                    targetInRootZone = false;
                 }
             }
             

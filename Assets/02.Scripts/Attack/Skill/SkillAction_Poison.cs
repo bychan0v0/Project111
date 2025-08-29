@@ -57,7 +57,6 @@ public class SkillAction_Poison : SkillActionBase
     }
 }
 
-// 재사용 가능한 도트 컴포넌트
 public class PoisonTicker : MonoBehaviour
 {
     Coroutine co;

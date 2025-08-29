@@ -62,7 +62,6 @@ public class AttackManager : MonoBehaviour
 
     public void AutoAttack()
     {
-        // 화살 생성 및 궤적 세팅
         var go  = Instantiate(arrowPrefab, muzzle.position, muzzle.rotation);
         var proj = go.GetComponent<ArrowController>();
 

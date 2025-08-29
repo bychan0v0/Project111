@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -18,13 +17,12 @@ public class MeteorEventManager : MonoBehaviour
     [SerializeField] private float overlayTargetAlpha = 0.35f;
     [SerializeField] private float overlayFadeIn = 0.25f;
     [SerializeField] private float overlayFadeOut = 0.25f;
-    [SerializeField] private float warningDuration = 2.0f;
     [SerializeField] private float blinkInterval = 0.35f;
     
     [Header("Meteor Settings")]
     [SerializeField] private GameObject meteorPrefab;
     [SerializeField] private GameObject dangerZonePrefab;
-    [SerializeField] private Transform[] meteorTargets;   // 4 spots
+    [SerializeField] private Transform[] meteorTargets;
 
     [Header("Layers")]
     [SerializeField] private LayerMask playerMask;
@@ -32,13 +30,15 @@ public class MeteorEventManager : MonoBehaviour
 
     private bool triggered;
     private Coroutine warningCo;
-    private Color bgOrigColor;   
+    private Color bgOrigColor;
+
+    private bool fadeOutRequested;
     
     private void Awake()
     {
         Instance = this;
-        
         bgOrigColor = backgroundSprite.color;
+
         var c = warningText.color;
         warningText.color = new Color(c.r, c.g, c.b, 0f);
         warningText.gameObject.SetActive(false);
@@ -60,40 +60,46 @@ public class MeteorEventManager : MonoBehaviour
     {
         btn.gameObject.SetActive(false);
 
+        fadeOutRequested = false;
+
         if (warningCo != null) StopCoroutine(warningCo);
         warningCo = StartCoroutine(PlayWarningFX());
         
         int idx = Random.Range(0, meteorTargets.Length);
         Transform target = meteorTargets[idx];
 
-        // Danger Zone 생성
         GameObject zone = Instantiate(dangerZonePrefab, target.position, Quaternion.identity);
-        var zoneCol = zone.GetComponent<BoxCollider2D>(); // isTrigger = true 필요
+        var zoneCol = zone.GetComponent<BoxCollider2D>();
+        
+        var bounds = zoneCol.bounds;
+        foreach (var ai in FindObjectsOfType<AIInput>())
+            ai.SetNoGoZone(bounds, 1.5f, 7.5f);
 
-        // 메테오 생성
         GameObject meteorObj = Instantiate(meteorPrefab, target.position + Vector3.up * 15f, Quaternion.identity);
         var meteor = meteorObj.GetComponent<Meteor>();
 
-        // zone 시각 제거는 Meteor가 충돌 후 수행
         meteor.Init(
             targetPos: target.position,
             zoneCollider: zoneCol,
             playerMask: playerMask,
             groundMask: groundMask,
-            onAfterImpact: () => Destroy(zone)
+            onAfterImpact: () => {
+                Destroy(zone);
+                RequestWarningFadeOut();
+            }
         );
     }
+
+    public void RequestWarningFadeOut() => fadeOutRequested = true;
     
     private IEnumerator PlayWarningFX()
     {
-         if (!backgroundSprite && !warningText) yield break;
+        if (!backgroundSprite && !warningText) yield break;
 
-        // 목표 틴트색: 원본과 빨강을 overlayTargetAlpha 비율로 섞은 색
         Color targetTint = backgroundSprite
             ? Color.Lerp(bgOrigColor, Color.red, Mathf.Clamp01(overlayTargetAlpha))
             : Color.red;
 
-        // Warning 텍스트 활성화(알파 0에서 시작)
         if (warningText)
         {
             var c0 = warningText.color;
@@ -101,16 +107,15 @@ public class MeteorEventManager : MonoBehaviour
             warningText.gameObject.SetActive(true);
         }
 
-        // 배경 페이드 인(원본→붉은 틴트)
         float t = 0f;
         while (t < overlayFadeIn)
         {
             t += Time.unscaledDeltaTime;
             float k = Mathf.Clamp01(t / overlayFadeIn);
+
             if (backgroundSprite)
                 backgroundSprite.color = Color.Lerp(bgOrigColor, targetTint, k);
 
-            // 텍스트도 서서히 보이기
             if (warningText)
             {
                 var c = warningText.color;
@@ -119,12 +124,10 @@ public class MeteorEventManager : MonoBehaviour
             yield return null;
         }
 
-        // 깜빡임 유지
-        float elapsed = 0f, blinkT = 0f;
-        while (elapsed < warningDuration)
+        float blinkT = 0f;
+        while (!fadeOutRequested)
         {
-            elapsed += Time.unscaledDeltaTime;
-            blinkT  += Time.unscaledDeltaTime;
+            blinkT += Time.unscaledDeltaTime;
 
             if (warningText)
             {
@@ -135,7 +138,6 @@ public class MeteorEventManager : MonoBehaviour
             yield return null;
         }
 
-        // 페이드 아웃(배경 원복 + 텍스트 숨김)
         t = 0f;
         float startA = warningText ? warningText.color.a : 0f;
         while (t < overlayFadeOut)
@@ -155,7 +157,7 @@ public class MeteorEventManager : MonoBehaviour
             yield return null;
         }
 
-        warningText.gameObject.SetActive(false);
+        if (warningText) warningText.gameObject.SetActive(false);
         warningCo = null;
     }
 }

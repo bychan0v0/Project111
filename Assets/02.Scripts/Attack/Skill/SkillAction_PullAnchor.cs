@@ -24,7 +24,6 @@ public class SkillAction_PullAnchor : SkillActionBase
     {
         Vector2 anchorPos = hitPoint;
 
-        // 플레이어를 맞췄다면, 그 지점 바로 아래 땅을 찾아서 고정
         bool hitPlayer = (hitCol != null) && ((1 << hitCol.gameObject.layer) == (1 << ctx.target.gameObject.layer));
         if (hitPlayer)
         {
@@ -33,10 +32,8 @@ public class SkillAction_PullAnchor : SkillActionBase
             {
                 anchorPos = ray.point + Vector2.up * 0.5f;
             }
-            // 못찾았으면 그냥 hitPoint 사용(플로팅 앵커)
         }
 
-        // 앵커 소환
         var anchor = Instantiate(pullAnchorPrefab, anchorPos + Vector2.up * 0.5f, Quaternion.identity);
         var pull = anchor.GetComponent<PullAnchor>();
         if (pull != null)

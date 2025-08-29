@@ -34,7 +34,6 @@ public class DamagePopup : MonoBehaviour
         t += Time.deltaTime;
         float p = Mathf.Clamp01(t / duration);
 
-        // ���� ��¦ �̵� + ������/������
         rt.position = startScreenPos + Vector2.up * (risePixels * p);
         rt.localScale = Vector3.one * scale.Evaluate(p);
         cg.alpha = alpha.Evaluate(p);

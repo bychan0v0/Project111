@@ -12,9 +12,9 @@ public class SkillCooldownUI : MonoBehaviour
     [SerializeField] private List<TMP_Text> labels;
 
     [Header("Display")]
-    [SerializeField] private bool fillShowsRemaining = true; // true: 남은비율, false: 진행비율
+    [SerializeField] private bool fillShowsRemaining = true;
     [SerializeField] private bool hideTextWhenReady = true;
-    [SerializeField] private string readyText = "";          // 준비 시 표시문구(비우면 숨김)
+    [SerializeField] private string readyText = "";
     [SerializeField] private float uiUpdateHz = 20f;
 
     private float tick;
@@ -29,7 +29,6 @@ public class SkillCooldownUI : MonoBehaviour
         if (loadout == null) return;
 
         int n = loadout.Count;
-        // 슬롯 수가 더 많으면 나머지는 비우기
         for (int i = 0; i < fills.Count || i < labels.Count; i++)
         {
             if (i >= n)
@@ -39,10 +38,10 @@ public class SkillCooldownUI : MonoBehaviour
                 continue;
             }
 
-            var def = loadout[i];           // SkillData
+            var def = loadout[i];
             if (def == null) continue;
 
-            float total   = Mathf.Max(0.0001f, def.cooldown); // 총 쿨타임(초)
+            float total   = Mathf.Max(0.0001f, def.cooldown);
             float remain  = skillManager.GetCooldownRemaining(def.skillId);
             float ratio   = Mathf.Clamp01(remain / total);
             float fillVal = fillShowsRemaining ? ratio : (1f - ratio);

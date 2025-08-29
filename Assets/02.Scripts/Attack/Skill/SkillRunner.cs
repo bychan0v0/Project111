@@ -5,8 +5,7 @@ using UnityEngine;
 public class SkillRunner : MonoBehaviour
 {
     [SerializeField] private SkillManager skillManager;
-
-    // 버튼에서 호출
+    
     public void OnClickSkill1() => skillManager.UseSkill("Skill_PullAnchor");
     public void OnClickSkill2() => skillManager.UseSkill("Skill_Backflip");
     public void OnClickSkill3() => skillManager.UseSkill("Skill_Silence");

@@ -31,16 +31,13 @@ public class ArrowImpactVFX : MonoBehaviour
     {
         if (!impactPrefab || !other) return;
 
-        // 플레이어일 때만 생성
         bool isPlayerByLayer = (playerMask.value & (1 << other.gameObject.layer)) != 0;
         bool isPlayerByComp  = other.GetComponentInParent<PlayerHp>() != null;
         if (!(isPlayerByLayer || isPlayerByComp))
             return;
 
-        // 1) 위치
         Vector3 pos = new Vector3(hitPoint.x, hitPoint.y, 0f);
 
-        // 2) 표면 노말 추정 (없으면 -비행방향)
         Vector2 dir = rb ? rb.velocity.normalized : (Vector2)tr.right;
         Vector2 normal = -dir;
         if (other)
@@ -50,16 +47,12 @@ public class ArrowImpactVFX : MonoBehaviour
             if (hit.collider) normal = hit.normal;
         }
 
-        // 3) 회전
         Quaternion rot = Quaternion.FromToRotation(Vector3.up, new Vector3(normal.x, normal.y, 0f));
 
-        // 4) 생성
         var fx = Instantiate(impactPrefab, pos, rot);
 
-        // 5) 맞은 대상에 붙일지(원하면 유지)
         fx.transform.SetParent(other.transform, true);
 
-        // 6) 자동 파괴
         var ps = fx.GetComponent<ParticleSystem>();
         if (ps)
         {

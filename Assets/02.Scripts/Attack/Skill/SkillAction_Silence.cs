@@ -56,10 +56,10 @@ public class SkillAction_Silence : SkillActionBase
             var skill = ctx.target.GetComponentInChildren<SkillManager>();
             StartCoroutine(SilenceRoutine(skill));
             HitUIRoot.Instance?.ShowStatusOver(
-                ctx.target,        // 맞은 대상 Transform
-                "Silence",         // 표시할 텍스트
-                duration,          // 지속시간
-                new Vector3(0f, 1f, 0f) // 머리 위 오프셋(캐릭터 키에 맞춰 조정)
+                ctx.target,
+                "Silence",
+                duration,
+                new Vector3(0f, 1f, 0f)
             );
         }
     }

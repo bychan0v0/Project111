@@ -14,10 +14,10 @@ public class SkillAction_LuckyShot : SkillActionBase
     [SerializeField] private float burstInterval = 0.05f;
     
     [Header("Lucky Params")]
-    [SerializeField, Range(0f,1f)] private float bonusChance = 0.35f; // 보너스 피해 확률
+    [SerializeField, Range(0f,1f)] private float bonusChance = 0.35f;
     [SerializeField] private int bonusDamage = 10;
 
-    [SerializeField, Range(0f,1f)] private float backfireChance = 0.07f; // 역효과 확률
+    [SerializeField, Range(0f,1f)] private float backfireChance = 0.07f;
     [SerializeField] private int backfireDamage = 3;
 
     [SerializeField] private Vector3 uiOffset = new Vector3(0, 1.6f, 0);
@@ -58,7 +58,6 @@ public class SkillAction_LuckyShot : SkillActionBase
     {
         if (!IsHitTarget(ctx, col)) return;
 
-        // 1) 보너스 피해 굴림
         if (Random.value < bonusChance)
         {
             if (TryGetDamageable(col, out var dmg) && dmg.IsAlive)
@@ -67,10 +66,9 @@ public class SkillAction_LuckyShot : SkillActionBase
                 HitUIRoot.Instance?.ShowDamage(bonusDamage, p);
                 HitUIRoot.Instance?.ShowStatusOver(col.transform.root, "CRIT!", 0.6f, uiOffset);
             }
-            return; // 보너스 났으면 역효과는 생략(원하면 둘 다 굴리게 바꿔도 됨)
+            return;
         }
 
-        // 2) 아주 낮은 확률로 역효과(시전자 자해)
         if (Random.value < backfireChance)
         {
             var selfHp = ctx.caster.GetComponentInChildren<PlayerHp>();
@@ -83,7 +81,7 @@ public class SkillAction_LuckyShot : SkillActionBase
         }
     }
 
-    bool TryGetDamageable(Collider2D col, out IDamageable d)
+    private bool TryGetDamageable(Collider2D col, out IDamageable d)
     {
         d = col.GetComponentInParent<IDamageable>();
         return d != null;

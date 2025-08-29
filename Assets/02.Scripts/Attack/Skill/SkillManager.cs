@@ -5,10 +5,10 @@ using UnityEngine;
 public class SkillManager : MonoBehaviour
 {
     [Header("Owner Refs")]
-    [SerializeField] private Rigidbody2D rb;       // 이 오브젝트의 바디
-    [SerializeField] private Transform caster;     // 시전자 루트
-    [SerializeField] private Transform muzzle;     // 발사 기준(없으면 caster)
-    [SerializeField] private Transform target;     // 현재 타깃(없으면 null)
+    [SerializeField] private Rigidbody2D rb;
+    [SerializeField] private Transform caster;
+    [SerializeField] private Transform muzzle;
+    [SerializeField] private Transform target;
 
     [Header("Loadout")]
     [SerializeField] private List<SkillData> loadout;
@@ -26,7 +26,6 @@ public class SkillManager : MonoBehaviour
     {
         player = GetComponentInParent<PlayerController>();
         
-        // 스킬 프리팹 미리 생성(플레이어/AI 모두 동일)
         foreach (var def in loadout)
         {
             var obj = Instantiate(def.prefab, transform);
@@ -63,7 +62,6 @@ public class SkillManager : MonoBehaviour
             return false;
         }
         
-        // 쿨다운 체크
         var def = loadout.Find(d => d.skillId == skillId);
         if (def)
         {
@@ -87,12 +85,11 @@ public class SkillManager : MonoBehaviour
         return true;
     }
     
-    // 로드아웃에서 '쿨다운 끝난' 첫 스킬을 바로 사용
     public bool TryUseFirstReadyInLoadout()
     {
-        foreach (var s in loadout) // loadout: List<SkillData> 등
+        foreach (var s in loadout)
         {
-            if (UseSkill(s.skillId))   // ← 내부에서 쿨다운/조건 체크 후 시작되면 true
+            if (UseSkill(s.skillId))
                 return true;
         }
         return false;
@@ -101,6 +98,6 @@ public class SkillManager : MonoBehaviour
     public float GetCooldownRemaining(string skillId)
     {
         if (!cooldownEnd.TryGetValue(skillId, out var end)) return 0f;
-        return Mathf.Max(0f, end - Time.time); // 남은 초
+        return Mathf.Max(0f, end - Time.time);
     }
 }
