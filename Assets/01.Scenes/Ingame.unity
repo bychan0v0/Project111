@@ -4774,7 +4774,7 @@ MonoBehaviour:
   showAfterSeconds: 1
   timerText: {fileID: 1217411482}
   matchDuration: 90
-  meteorTime: 90
+  meteorTime: 45
 --- !u!114 &1180038638
 MonoBehaviour:
   m_ObjectHideFlags: 0
